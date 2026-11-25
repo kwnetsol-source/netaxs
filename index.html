@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products Showcase — Virtual Experience</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#171512;color:#fff;font-family:Arial,sans-serif}
+#canvas-container{position:fixed;inset:0;transform:translateZ(0)}
+canvas{display:block;width:100%;height:100%}
+
+/* Top Navigation Bar */
+.topbar{position:fixed;z-index:4;top:0;left:0;width:100%;padding:22px 5%;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,#171512cc,transparent);pointer-events:none}
+.logo{font-size:17px;font-weight:700;letter-spacing:4px;pointer-events:auto}.logo span{color:#c8a66a}
+.nav-right{display:flex;align-items:center;gap:16px;pointer-events:auto}
+.top-menu{font-size:10px;letter-spacing:2.5px;color:#d0c4af}
+.nav-btn,.nav-link{font-size:10px;letter-spacing:2px;color:#e8d4a8;text-decoration:none;border:1px solid #8f7449;background:#171512d4;padding:8px 14px;border-radius:3px;cursor:pointer;transition:all .2s;font-weight:700}
+.nav-btn:hover,.nav-link:hover{background:#c8a66a;color:#171512;border-color:#c8a66a}
+
+.eyebrow,.scroll-indicator,.bottom-info{font-size:10px;letter-spacing:3px;color:#d0c4af}
+.intro{position:fixed;z-index:2;top:50%;left:9%;transform:translate3d(0,-50%,0);pointer-events:none;will-change:opacity}
+.eyebrow{color:#d0ae70;margin-bottom:22px}
+h1{font-size:clamp(54px,8.5vw,110px);line-height:.94;letter-spacing:-3px}
+h1 span{color:#c8a66a}
+.subtitle{margin-top:22px;color:#d0c4af;font-size:14px;letter-spacing:1px}
+.scroll-indicator{margin-top:55px}.scroll-line{height:1px;width:68px;background:#c8a66a;margin-top:14px}
+.progress{position:fixed;z-index:3;right:28px;top:50%;height:145px;width:2px;background:#655d50;transform:translate3d(0,-50%,0)}
+#progress-bar{height:100%;width:100%;background:#d5b16d;transform:scaleY(0);transform-origin:top;will-change:transform}
+.bottom-info{position:fixed;z-index:3;bottom:23px;left:5%;right:5%;display:flex;justify-content:space-between;pointer-events:none}
+.hint{position:fixed;z-index:3;bottom:58px;left:50%;transform:translate3d(-50%,0,0);font-size:10px;letter-spacing:1px;color:#e4d5b9;background:#171512cc;padding:10px 15px;border:1px solid #8f7449;border-radius:20px;white-space:nowrap;transition:opacity .35s ease;will-change:opacity}
+
+/* Product & Company Info Cards */
+.art-info,.company-modal{display:none;position:fixed;z-index:5;width:min(380px,90vw);padding:24px;background:#171512f7;border:1px solid #a88a55;box-shadow:0 12px 50px #000b;border-radius:4px}
+.art-info{right:5%;bottom:12%}
+.company-modal{right:5%;top:84px}
+.art-info p,.company-modal p.label{font-size:9px;letter-spacing:3px;color:#c8a66a}
+.art-info h2,.company-modal h2{font:26px Georgia,serif;margin:10px 0 12px}
+#product-preview{width:100%;height:170px;object-fit:cover;border-radius:4px;border:1px solid #4a3f2b;margin-bottom:14px;background:#221f1b}
+#art-description,.company-desc{font-size:13px;line-height:1.6;color:#d2c9bb;margin-bottom:16px}
+.company-meta{font-size:12px;line-height:1.8;color:#e4d5b9;margin-bottom:18px;border-top:1px solid #3a3225;padding-top:12px}
+#close-art,#close-company{float:right;border:0;background:none;color:white;font-size:27px;cursor:pointer;line-height:1}
+.product-link-btn{display:inline-block;padding:10px 16px;background:#c8a66a;color:#171512;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1px;border-radius:3px;transition:background .2s}
+.product-link-btn:hover{background:#dfb976}
+
+#scroll-track{position:fixed;inset:0;z-index:0;overflow-y:auto;pointer-events:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#scroll-track::-webkit-scrollbar{display:none}
+#scroll-spacer{height:680vh;width:1px}
+#canvas-container{pointer-events:none}
+#canvas-container canvas{pointer-events:auto}
+@media(max-width:650px){
+  .topbar{padding:16px 5%}
+  .top-menu{display:none}
+  .nav-right{gap:10px}
+  .nav-btn,.nav-link{padding:6px 10px;font-size:9px;letter-spacing:1px}
+  .intro{left:7%}
+  h1{font-size:58px}
+  .progress{right:12px}
+  .bottom-info{font-size:8px;letter-spacing:1px}
+}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}
+</script>
+</head>
+<body>
+<div id="canvas-container"></div>
+
+<!-- Navigation Bar -->
+<header class="topbar">
+  <div class="logo">LOW VOLTAGE <span>STORE</span></div>
+  <div class="nav-right">
+    <span class="top-menu">PRODUCT SHOWCASE · 2026</span>
+    <button class="nav-btn" id="open-company" type="button">COMPANY</button>
+    <a class="nav-link" id="more-info-link" href="https://example.com/more-info" target="_blank" rel="noopener noreferrer">MORE INFO</a>
+  </div>
+</header>
+
+<section class="intro" id="intro">
+  <p class="eyebrow">WELCOME TO OUR CATALOG</p>
+  <h1>SMART TECH<br><span>SYSTEMS.</span></h1>
+  <p class="subtitle">Cameras, DVRs & Low Voltage Solutions.</p>
+  <div class="scroll-indicator">SCROLL TO EXPLORE<div class="scroll-line"></div></div>
+</section>
+
+<div class="progress"><div id="progress-bar"></div></div>
+<div class="bottom-info"><span>VIRTUAL PRODUCT GALLERY</span><span id="progress-text">00%</span></div>
+<div class="hint" id="hint">Scroll to walk · Move mouse left/right to face products · Click to view</div>
+
+<!-- Company Details Popup -->
+<div class="company-modal" id="company-modal">
+  <button id="close-company" aria-label="Close">×</button>
+  <p class="label">ABOUT COMPANY</p>
+  <h2 id="company-name">Company Name</h2>
+  <div class="company-desc" id="company-about"></div>
+  <div class="company-meta" id="company-contact"></div>
+  <a id="company-more-link" class="product-link-btn" href="#" target="_blank" rel="noopener noreferrer">MORE INFO →</a>
+</div>
+
+<!-- Product Details Popup -->
+<div class="art-info" id="art-info">
+  <button id="close-art" aria-label="Close">×</button>
+  <p>PRODUCT DETAILS</p>
+  <h2 id="art-title">Product Name</h2>
+  <img id="product-preview" src="" alt="Product Image">
+  <div id="art-description"></div>
+  <a id="product-link" class="product-link-btn" href="#" target="_blank" rel="noopener noreferrer">OPEN PRODUCT PAGE →</a>
+</div>
+
+<div id="scroll-track"><div id="scroll-spacer"></div></div>
+
+<script type="module">
+import * as THREE from "three";
+
+// ==========================================
+// 1. കമ്പനി വിവരങ്ങളും MORE INFO ലിങ്കും
+// ==========================================
+const COMPANY_INFO = {
+  name: "Apex Low Voltage Systems",
+  tagline: "CCTV CAMERAS · DVR SYSTEMS · LOW VOLTAGE SOLUTIONS",
+  description: "Trusted supplier and installer of commercial surveillance cameras, multi-channel DVRs, structured cabling, and low-voltage security systems.",
+  phone: "+965 0000 0000",
+  email: "info@example.com",
+  location: "Mangaf, Kuwait",
+  moreInfoUrl: "https://google.com"
+};
+
+const moreInfoNavLink = document.querySelector("#more-info-link");
+const companyMoreLink = document.querySelector("#company-more-link");
+moreInfoNavLink.href = COMPANY_INFO.moreInfoUrl;
+companyMoreLink.href = COMPANY_INFO.moreInfoUrl;
+
+document.querySelector("#company-name").textContent = COMPANY_INFO.name;
+document.querySelector("#company-about").textContent = COMPANY_INFO.description;
+document.querySelector("#company-contact").innerHTML =
+  `<strong>Phone:</strong> ${COMPANY_INFO.phone}<br><strong>Email:</strong> ${COMPANY_INFO.email}<br><strong>Location:</strong> ${COMPANY_INFO.location}`;
+
+// ==========================================
+// 2. നിങ്ങളുടെ PRODUCTS ഇവിടെ ചേർക്കുക
+// ==========================================
+const PRODUCTS = [
+  {
+    name: "4K Dome Security Camera",
+    description: "Ultra-HD indoor/outdoor dome camera with night vision, motion detection, and weatherproof IP67 body.",
+    image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=600&q=75",
+    url: "https://example.com/products/4k-dome-camera"
+  },
+  {
+    name: "16-Channel HD DVR Recorder",
+    description: "High-capacity digital video recorder supporting multi-channel playback, remote mobile viewing, and continuous recording.",
+    image: "https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=600&q=75",
+    url: "https://example.com/products/16ch-dvr"
+  },
+  {
+    name: "Low Voltage PoE Switch",
+    description: "8-port Power-over-Ethernet network switch for clean low-voltage power and data delivery to IP cameras and access points.",
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=75",
+    url: "https://example.com/products/poe-switch"
+  },
+  {
+    name: "Bullet IR Night Camera",
+    description: "Long-range infrared bullet camera designed for perimeter monitoring, parking lots, and commercial entrances.",
+    image: "https://images.unsplash.com/photo-1588508065123-287b28e013da?w=600&q=75",
+    url: "https://example.com/products/ir-bullet-camera"
+  },
+  {
+    name: "24V Low Voltage Power Supply",
+    description: "Regulated multi-output low-voltage power distribution box with surge protection for security and automation systems.",
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=75",
+    url: "https://example.com/products/24v-power-supply"
+  },
+  {
+    name: "Smart Access Control Keypad",
+    description: "Low-voltage RFID and PIN access controller for secure doors, gates, and restricted commercial rooms.",
+    image: "https://images.unsplash.com/photo-1558002038-1055907df827?w=600&q=75",
+    url: "https://example.com/products/access-keypad"
+  }
+];
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x171512);
+scene.fog = new THREE.Fog(0x171512, 24, 88);
+
+const camera = new THREE.PerspectiveCamera(64, innerWidth / innerHeight, 0.1, 140);
+camera.rotation.order = "YXZ";
+camera.position.set(0, 2.35, 9);
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  powerPreference: "high-performance",
+  stencil: false
+});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+renderer.shadowMap.enabled = false;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.querySelector("#canvas-container").appendChild(renderer.domElement);
+
+scene.add(new THREE.HemisphereLight(0xd9d8e2, 0x554332, 1.85));
+scene.add(new THREE.AmbientLight(0xffe2b5, 0.5));
+const key = new THREE.DirectionalLight(0xffe2c0, 1.8);
+key.position.set(-2, 8, 5);
+scene.add(key);
+
+const wallMat = new THREE.MeshStandardMaterial({ color: 0x77716a, roughness: 0.92 });
+const floorMat = new THREE.MeshStandardMaterial({ color: 0x887e70, roughness: 0.35, metalness: 0.08 });
+const ceilingMat = new THREE.MeshStandardMaterial({ color: 0x292622, roughness: 0.9 });
+const goldMat = new THREE.MeshStandardMaterial({ color: 0xb38d50, metalness: 0.7, roughness: 0.32 });
+const lineMat = new THREE.MeshStandardMaterial({ color: 0xb59a6c, metalness: 0.45, roughness: 0.45 });
+const lampMat = new THREE.MeshBasicMaterial({ color: 0xebd7aa });
+
+const unitBoxGeo = new THREE.BoxGeometry(1, 1, 1);
+const lampGeo = new THREE.BoxGeometry(0.75, 0.08, 0.75);
+
+function box(w, h, d, mat, x, y, z) {
+  const m = new THREE.Mesh(unitBoxGeo, mat);
+  m.scale.set(w, h, d);
+  m.position.set(x, y, z);
+  scene.add(m);
+  return m;
+}
+
+box(12, 0.22, 100, floorMat, 0, -0.12, -40);
+box(12, 0.18, 100, ceilingMat, 0, 7.05, -40);
+box(0.18, 7, 100, wallMat, -6, 3.5, -40);
+box(0.18, 7, 100, wallMat, 6, 3.5, -40);
+
+for (let x = -4; x <= 4; x += 2) box(0.018, 0.012, 98, lineMat, x, 0.002, -40);
+for (let z = 5; z >= -88; z -= 5) box(11.8, 0.012, 0.018, lineMat, 0, 0.003, z);
+
+for (let z = 3; z >= -85; z -= 10) {
+  box(10, 0.045, 0.12, goldMat, 0, 6.88, z);
+  for (const x of [-3.8, 3.8]) {
+    const lamp = new THREE.Mesh(lampGeo, lampMat);
+    lamp.position.set(x, 6.91, z - 1.5);
+    scene.add(lamp);
+  }
+}
+
+for (let z = -5; z >= -85; z -= 20) {
+  const corridorLight = new THREE.PointLight(0xffdca6, 22, 26);
+  corridorLight.position.set(0, 6.2, z);
+  scene.add(corridorLight);
+}
+
+// End wall (z = -91)
+box(12, 7, 0.25, wallMat, 0, 3.5, -91);
+
+// Company board with a large prominent MORE INFO button inside the board
+function createCompanyBoardTexture(info) {
+  const c = document.createElement("canvas");
+  c.width = 1024;
+  c.height = 680;
+  const g = c.getContext("2d");
+
+  g.fillStyle = "#14120f";
+  g.fillRect(0, 0, 1024, 680);
+
+  g.strokeStyle = "#c8a66a";
+  g.lineWidth = 8;
+  g.strokeRect(28, 28, 968, 624);
+
+  g.fillStyle = "#c8a66a";
+  g.font = "bold 22px Arial";
+  g.textAlign = "center";
+  g.fillText("COMPANY PROFILE", 512, 88);
+
+  g.fillStyle = "#ffffff";
+  g.font = "bold 52px Georgia, serif";
+  g.fillText(info.name, 512, 158);
+
+  g.fillStyle = "#d5b16d";
+  g.font = "bold 20px Arial";
+  g.fillText(info.tagline, 512, 208);
+
+  g.fillStyle = "#d2c9bb";
+  g.font = "25px Arial";
+  const words = info.description.split(" ");
+  let line = "", yPos = 272;
+  for (const w of words) {
+    const testLine = line + w + " ";
+    if (g.measureText(testLine).width > 820) {
+      g.fillText(line.trim(), 512, yPos);
+      line = w + " ";
+      yPos += 35;
+    } else {
+      line = testLine;
+    }
+  }
+  if (line.trim()) g.fillText(line.trim(), 512, yPos);
+
+  g.fillStyle = "#e8d4a8";
+  g.font = "23px Arial";
+  g.fillText(`${info.phone}   |   ${info.email}   |   ${info.location}`, 512, 435);
+
+  // Large prominent MORE INFO button inside the board
+  const btnX = 332, btnY = 485, btnW = 360, btnH = 82;
+  g.fillStyle = "#c8a66a";
+  g.fillRect(btnX, btnY, btnW, btnH);
+
+  g.strokeStyle = "#f2d89b";
+  g.lineWidth = 3;
+  g.strokeRect(btnX + 4, btnY + 4, btnW - 8, btnH - 8);
+
+  g.fillStyle = "#14120f";
+  g.font = "bold 30px Arial";
+  g.fillText("MORE INFO  →", 512, btnY + 52);
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+const clickable = [];
+
+const endBoardMat = new THREE.MeshBasicMaterial({ map: createCompanyBoardTexture(COMPANY_INFO) });
+const endBoard = new THREE.Mesh(new THREE.PlaneGeometry(7.8, 5.15), endBoardMat);
+endBoard.position.set(0, 3.1, -90.84);
+endBoard.userData = {
+  isCompanyBoard: true,
+  url: COMPANY_INFO.moreInfoUrl
+};
+scene.add(endBoard);
+clickable.push(endBoard);
+
+function fallbackTexture(title, index) {
+  const c = document.createElement("canvas");
+  c.width = 400; c.height = 520;
+  const g = c.getContext("2d");
+  const colors = ["#2b2723", "#232d38", "#2d2430", "#22312c"];
+  g.fillStyle = colors[index % colors.length];
+  g.fillRect(0, 0, 400, 520);
+  g.strokeStyle = "#c8a66a";
+  g.lineWidth = 5;
+  g.strokeRect(20, 20, 360, 480);
+  g.fillStyle = "#e8d4a8";
+  g.font = "bold 24px Arial";
+  g.textAlign = "center";
+  g.fillText(title.slice(0, 24), 200, 260);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+const textureLoader = new THREE.TextureLoader();
+textureLoader.setCrossOrigin("anonymous");
+
+const framePlaneGeo = new THREE.PlaneGeometry(2.35, 3.1);
+
+function addProductFrame(side, z, index) {
+  const product = PRODUCTS[index % PRODUCTS.length];
+  const group = new THREE.Group();
+  group.position.set(side * 5.86, 2.65, z);
+  group.rotation.y = side < 0 ? Math.PI / 2 : -Math.PI / 2;
+
+  const fw = 2.62, fh = 3.38, b = 0.13;
+  function part(w, h, x, y) {
+    const m = new THREE.Mesh(unitBoxGeo, goldMat);
+    m.scale.set(w, h, 0.16);
+    m.position.set(x, y, 0);
+    group.add(m);
+  }
+  part(fw, b, 0, fh / 2);
+  part(fw, b, 0, -fh / 2);
+  part(b, fh, -fw / 2, 0);
+  part(b, fh, fw / 2, 0);
+
+  const mat = new THREE.MeshStandardMaterial({
+    map: fallbackTexture(product.name, index),
+    roughness: 0.65
+  });
+
+  if (product.image) {
+    textureLoader.load(
+      product.image,
+      (tex) => {
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.anisotropy = 2;
+        mat.map = tex;
+        mat.needsUpdate = true;
+      },
+      undefined,
+      () => {}
+    );
+  }
+
+  const inner = new THREE.Mesh(framePlaneGeo, mat);
+  inner.position.z = 0.087;
+  inner.userData = {
+    title: product.name,
+    description: product.description,
+    image: product.image,
+    url: product.url
+  };
+
+  group.add(inner);
+  scene.add(group);
+  clickable.push(inner);
+
+  box(0.9, 0.18, 0.055, goldMat, side * 5.77, 0.82, z);
+}
+
+let n = 0;
+for (let z = -2; z >= -82; z -= 9) {
+  addProductFrame(-1, z, n++);
+  addProductFrame(1, z, n++);
+}
+
+const companyModal = document.querySelector("#company-modal");
+const infoBox = document.querySelector("#art-info");
+
+document.querySelector("#open-company").onclick = () => {
+  infoBox.style.display = "none";
+  companyModal.style.display = companyModal.style.display === "block" ? "none" : "block";
+};
+document.querySelector("#close-company").onclick = () => companyModal.style.display = "none";
+
+const raycaster = new THREE.Raycaster(), mouse = new THREE.Vector2();
+const previewImg = document.querySelector("#product-preview");
+const linkEl = document.querySelector("#product-link");
+
+let targetYaw = 0, currentYaw = 0;
+let targetPitch = 0, currentPitch = 0;
+let targetLateral = 0, currentLateral = 0;
+let pointerDownPos = { x: 0, y: 0 };
+
+window.addEventListener("pointermove", (e) => {
+  const nx = (e.clientX / innerWidth) * 2 - 1;
+  const ny = (e.clientY / innerHeight) * 2 - 1;
+
+  const easedX = Math.sign(nx) * Math.pow(Math.abs(nx), 1.15);
+  const anyModalOpen = infoBox.style.display === "block" || companyModal.style.display === "block";
+  const turnScale = anyModalOpen ? 0.35 : 1.0;
+
+  targetYaw = -easedX * 1.44 * turnScale;
+  targetPitch = -ny * 0.16 * turnScale;
+  targetLateral = -easedX * 0.85 * turnScale;
+
+  mouse.x = nx;
+  mouse.y = -ny;
+  raycaster.setFromCamera(mouse, camera);
+  const hit = raycaster.intersectObjects(clickable, false);
+  renderer.domElement.style.cursor = hit.length ? "pointer" : "grab";
+}, { passive: true });
+
+renderer.domElement.addEventListener("pointerdown", (e) => {
+  pointerDownPos.x = e.clientX;
+  pointerDownPos.y = e.clientY;
+});
+
+renderer.domElement.addEventListener("pointerup", (e) => {
+  const movedDist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y);
+  if (movedDist > 6) return;
+
+  mouse.x = (e.clientX / innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const hit = raycaster.intersectObjects(clickable, false);
+
+  if (hit.length) {
+    const data = hit[0].object.userData;
+    if (data.isCompanyBoard && data.url) {
+      window.open(data.url, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    companyModal.style.display = "none";
+    document.querySelector("#art-title").textContent = data.title;
+    document.querySelector("#art-description").textContent = data.description;
+    previewImg.src = data.image || "";
+    previewImg.style.display = data.image ? "block" : "none";
+    linkEl.href = data.url || "#";
+    infoBox.style.display = "block";
+  }
+});
+
+document.querySelector("#close-art").onclick = () => infoBox.style.display = "none";
+
+const track = document.querySelector("#scroll-track");
+const progressBar = document.querySelector("#progress-bar");
+const progressText = document.querySelector("#progress-text");
+const introEl = document.querySelector("#intro");
+const hintEl = document.querySelector("#hint");
+
+let targetProgress = 0;
+let currentProgress = 0;
+let lastPct = -1;
+let hintHidden = false;
+
+function updateScrollTarget() {
+  const maxScroll = Math.max(1, track.scrollHeight - track.clientHeight);
+  targetProgress = Math.min(1, Math.max(0, track.scrollTop / maxScroll));
+
+  progressBar.style.transform = `scaleY(${targetProgress})`;
+
+  const pct = Math.round(targetProgress * 100);
+  if (pct !== lastPct) {
+    lastPct = pct;
+    progressText.textContent = pct.toString().padStart(2, "0") + "%";
+  }
+
+  introEl.style.opacity = String(Math.max(0, 1 - targetProgress * 5));
+
+  const shouldHideHint = targetProgress > 0.04;
+  if (shouldHideHint !== hintHidden) {
+    hintHidden = shouldHideHint;
+    hintEl.style.opacity = hintHidden ? "0" : "1";
+  }
+}
+
+track.addEventListener("scroll", updateScrollTarget, { passive: true });
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  currentProgress += (targetProgress - currentProgress) * 0.08;
+  currentYaw += (targetYaw - currentYaw) * 0.08;
+  currentPitch += (targetPitch - currentPitch) * 0.08;
+  currentLateral += (targetLateral - currentLateral) * 0.07;
+
+  const z = THREE.MathUtils.lerp(9, -83, currentProgress);
+
+  const walkPhase = currentProgress * 92;
+  const stepX = Math.sin(walkPhase * 0.5) * 0.1 + currentLateral;
+  const bobY = 2.45 + Math.abs(Math.sin(walkPhase)) * 0.03;
+
+  camera.position.set(stepX, bobY, z);
+  camera.rotation.y = currentYaw;
+  camera.rotation.x = currentPitch;
+  camera.rotation.z = -currentYaw * 0.02;
+
+  renderer.render(scene, camera);
+}
+animate();
+
+addEventListener("resize", () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+});
+</script>
+</body>
+</html>
