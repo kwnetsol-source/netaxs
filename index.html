@@ -324,6 +324,10 @@
     margin-bottom: 16px;
   }
 
+  #art-description {
+    white-space: pre-line;
+  }
+
   .company-meta {
     font-size: 12.5px;
     line-height: 1.85;
@@ -517,7 +521,7 @@ const COMPANY_INFO = {
   phone: "+965 0000 0000",
   email: "info@example.com",
   location: "Mangaf, Kuwait",
-  moreInfoUrl: "https://kwnetsol-source.github.io/kasargod_ulsav2025/"
+  moreInfoUrl: "https://google.com"
 };
 
 const moreInfoNavLink = document.querySelector("#more-info-link");
@@ -535,17 +539,25 @@ document.querySelector("#company-contact").innerHTML =
 // ==========================================
 const PRODUCTS = [
   {
-    name: "4K Dome Security Camera",
-    shortDesc: "4K Ultra-HD, IP67 weatherproof & IR night vision.",
-    description: "Ultra-HD indoor/outdoor dome camera with night vision, motion detection, and weatherproof IP67 body.",
-    image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=600&q=75",
+    name: "Home Security Camera Systems",
+    shortDesc: "Protect your home with advanced security camera solutions designed for reliable 24/7 surveillance and peace of mind. Our home security cameras offer high-definition video quality, night vision, motion detection, remote live monitoring, and mobile app access. Suitable for indoor and outdoor installations, providing enhanced safety and security for your family and property.",
+    description: `Key Features:
+- Full HD / 4K high-resolution video.
+- Day and night vision.
+- Smart motion detection and alerts.
+- Remote viewing via smartphone.
+- Two-way audio communication.
+- Indoor and weatherproof outdoor cameras.
+- 24/7 recording and playback.
+- Easy installation and monitoring.`,
+    image: "./images/CCTV-1.png",
     url: "https://example.com/products/4k-dome-camera"
   },
   {
     name: "16-Channel HD DVR Recorder",
     shortDesc: "16-CH recording, remote mobile view & playback.",
     description: "High-capacity digital video recorder supporting multi-channel playback, remote mobile viewing, and continuous recording.",
-    image: "https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=600&q=75",
+    image: "https://www.rapidalarms.com.au/wp-content/uploads/2021/06/Depositphotos_40421751_s-2019-1000x675.jpg-1-1.webp",
     url: "https://example.com/products/16ch-dvr"
   },
   {
@@ -734,65 +746,78 @@ endBoard.userData = {
 scene.add(endBoard);
 clickable.push(endBoard);
 
-// Painted directly on the wall (no box, no border, transparent background with subtle paint brush feel)
+function wrapLines(ctx, text, maxWidth, maxLines = 11) {
+  const words = (text || "").split(" ").filter(Boolean);
+  const lines = [];
+  let current = "";
+
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+    const candidate = current ? `${current} ${word}` : word;
+    if (ctx.measureText(candidate).width <= maxWidth) {
+      current = candidate;
+    } else {
+      if (current) lines.push(current);
+      if (lines.length === maxLines) {
+        current = "";
+        break;
+      }
+      current = word;
+    }
+  }
+
+  if (current && lines.length < maxLines) {
+    lines.push(current);
+  }
+
+  return lines;
+}
+
+// Painted directly on the wall (Larger heading & description)
 function createWallPaintedTextTexture(product) {
   const c = document.createElement("canvas");
-  c.width = 768;
-  c.height = 360;
+  c.width = 860;
+  c.height = 600;
   const g = c.getContext("2d");
 
   g.clearRect(0, 0, c.width, c.height);
 
-  // Subtle painted brush strokes / grain directly on the wall
   g.save();
-  for (let i = 0; i < 42; i++) {
-    const sy = 26 + ((i * 73) % 305);
-    const sx = 18 + ((i * 137) % 520);
-    const sw = 90 + ((i * 53) % 140);
+  for (let i = 0; i < 65; i++) {
+    const sy = 20 + ((i * 89) % 550);
+    const sx = 18 + ((i * 149) % 600);
+    const sw = 100 + ((i * 59) % 160);
     g.globalAlpha = 0.035 + (i % 3) * 0.015;
     g.fillStyle = i % 2 === 0 ? "#f3e7d0" : "#2d2823";
     g.fillRect(sx, sy, sw, 3);
   }
   g.restore();
 
-  // Painted heading (looks like hand/stencil wall paint)
   g.save();
   g.textAlign = "left";
-  g.fillStyle = "rgba(255, 248, 232, 0.92)";
-  g.shadowColor = "rgba(22, 19, 15, 0.55)";
+  g.fillStyle = "rgba(255, 248, 232, 0.94)";
+  g.shadowColor = "rgba(22, 19, 15, 0.58)";
   g.shadowBlur = 4;
   g.shadowOffsetX = 1.5;
   g.shadowOffsetY = 2;
 
-  g.font = "bold 46px Georgia, serif";
-  const heading = product.name.length > 26 ? product.name.slice(0, 25) + "…" : product.name;
-  g.fillText(heading, 24, 92);
+  g.font = "bold 48px Georgia, serif";
+  const heading = product.name.length > 30 ? product.name.slice(0, 29) + "…" : product.name;
+  g.fillText(heading, 24, 72);
 
-  // Painted underline brush stroke
   g.shadowBlur = 2;
-  g.fillStyle = "rgba(213, 177, 109, 0.78)";
-  g.fillRect(24, 114, 240, 4);
+  g.fillStyle = "rgba(213, 177, 109, 0.82)";
+  g.fillRect(24, 92, 270, 5);
 
-  // Short description painted below heading
   const shortText = product.shortDesc || product.description || "";
-  g.fillStyle = "rgba(244, 236, 220, 0.84)";
-  g.font = "italic 30px Georgia, serif";
+  g.fillStyle = "rgba(244, 236, 220, 0.88)";
+  g.font = "italic 26px Georgia, serif";
 
-  const words = shortText.split(" ");
-  let line1 = "", line2 = "";
-  for (const word of words) {
-    const test1 = line1 ? line1 + " " + word : word;
-    if (g.measureText(test1).width <= 710 && !line2) {
-      line1 = test1;
-    } else {
-      const test2 = line2 ? line2 + " " + word : word;
-      if (g.measureText(test2).width <= 710) {
-        line2 = test2;
-      }
-    }
-  }
-  if (line1) g.fillText(line1, 24, 174);
-  if (line2) g.fillText(line2, 24, 218);
+  const lines = wrapLines(g, shortText, 810, 11);
+  lines.forEach((line, idx) => {
+    g.fillText(line, 24, 140 + idx * 36);
+  });
+
   g.restore();
 
   const tex = new THREE.CanvasTexture(c);
@@ -822,7 +847,7 @@ function fallbackTexture(title, index) {
 const textureLoader = new THREE.TextureLoader();
 textureLoader.setCrossOrigin("anonymous");
 const framePlaneGeo = new THREE.PlaneGeometry(2.35, 3.1);
-const wallPaintGeo = new THREE.PlaneGeometry(3.4, 1.6);
+const wallPaintGeo = new THREE.PlaneGeometry(4.3, 3.0);
 
 function addProductFrame(side, z, index) {
   const product = PRODUCTS[index % PRODUCTS.length];
@@ -872,15 +897,14 @@ function addProductFrame(side, z, index) {
 
   group.add(inner);
 
-  // Heading + short description painted directly onto the wall beside the image
   const paintMat = new THREE.MeshBasicMaterial({
     map: createWallPaintedTextTexture(product),
     transparent: true,
     depthWrite: false
   });
   const paintMesh = new THREE.Mesh(wallPaintGeo, paintMat);
-  const localSideOffset = side < 0 ? 3.25 : -3.25;
-  paintMesh.position.set(localSideOffset, 0.65, -0.02);
+  const localSideOffset = side < 0 ? 3.72 : -3.72;
+  paintMesh.position.set(localSideOffset, 0.25, -0.02);
   paintMesh.userData = {
     title: product.name,
     description: product.description,
