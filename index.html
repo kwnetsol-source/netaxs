@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Products Showcase — Virtual Experience</title>
+<title>NetAxS Smart Solutions — Virtual Product Showcase</title>
 <style>
   * {
     box-sizing: border-box;
@@ -47,19 +47,51 @@
     top: 0;
     left: 0;
     width: 100%;
-    padding: max(18px, env(safe-area-inset-top)) 5% 18px;
+    padding: max(14px, env(safe-area-inset-top)) 4.5% 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to bottom, rgba(23, 21, 18, 0.9), transparent);
+    background: linear-gradient(to bottom, rgba(23, 21, 18, 0.94), transparent);
     pointer-events: none;
   }
 
-  .logo {
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: 4px;
+  .brand-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
     pointer-events: auto;
+  }
+
+  .brand-logo-box {
+    height: 62px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .brand-logo-img {
+    height: 100%;
+    width: auto;
+    max-width: 215px;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.7));
+  }
+
+  .brand-logo-img.blend-fallback {
+    mix-blend-mode: screen;
+    filter: contrast(1.25) brightness(1.05) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.65));
+  }
+
+  .logo {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    white-space: nowrap;
   }
   .logo span {
     color: #c8a66a;
@@ -68,7 +100,7 @@
   .nav-right {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     pointer-events: auto;
   }
 
@@ -114,7 +146,7 @@
   .intro {
     position: fixed;
     z-index: 3;
-    top: 48%;
+    top: 50%;
     left: 9%;
     transform: translate3d(0, -50%, 0);
     pointer-events: none;
@@ -140,7 +172,7 @@
     color: #d0c4af;
     font-size: 14px;
     letter-spacing: 0.8px;
-    max-width: 420px;
+    max-width: 440px;
   }
 
   .scroll-indicator {
@@ -259,7 +291,7 @@
     display: none;
     position: fixed;
     z-index: 20;
-    width: min(390px, 90vw);
+    width: min(400px, 90vw);
     padding: 24px;
     background: rgba(23, 21, 18, 0.96);
     backdrop-filter: blur(14px);
@@ -291,7 +323,34 @@
 
   .company-modal {
     right: 5%;
-    top: 84px;
+    top: 96px;
+  }
+
+  .company-logo-banner {
+    width: 100%;
+    height: 118px;
+    background: transparent;
+    border-radius: 8px;
+    border: 1px solid rgba(143, 116, 73, 0.45);
+    padding: 6px 12px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .company-logo-img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.7));
+  }
+
+  .company-logo-img.blend-fallback {
+    mix-blend-mode: screen;
+    filter: contrast(1.25) brightness(1.05) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.65));
   }
 
   .art-info p, .company-modal p.label {
@@ -402,11 +461,20 @@
   /* Compact Phone Layout */
   @media (max-width: 650px) {
     .topbar {
-      padding: max(12px, env(safe-area-inset-top)) 4% 12px;
+      padding: max(10px, env(safe-area-inset-top)) 3.5% 10px;
+    }
+    .brand-group {
+      gap: 7px;
+    }
+    .brand-logo-box {
+      height: 46px;
+      padding: 1px 3px;
+    }
+    .brand-logo-img {
+      max-width: 142px;
     }
     .logo {
-      font-size: 13px;
-      letter-spacing: 2px;
+      display: none;
     }
     .top-menu {
       display: none;
@@ -415,14 +483,14 @@
       gap: 6px;
     }
     .nav-btn, .nav-link {
-      padding: 7px 10px;
+      padding: 7px 9px;
       font-size: 8.5px;
-      letter-spacing: 1px;
+      letter-spacing: 0.9px;
     }
     .intro {
       left: 6%;
       right: 12%;
-      top: 42%;
+      top: 46%;
     }
     h1 {
       font-size: clamp(40px, 12.5vw, 58px);
@@ -456,6 +524,9 @@
       overflow-y: auto;
       border-radius: 16px;
     }
+    .company-logo-banner {
+      height: 92px;
+    }
     .art-info h2, .company-modal h2 {
       font-size: 20px;
     }
@@ -466,8 +537,14 @@
 
   /* Mobile Landscape Layout */
   @media (max-height: 500px) and (pointer: coarse) {
+    .brand-logo-box {
+      height: 44px;
+    }
+    .brand-logo-img {
+      max-width: 130px;
+    }
     .intro {
-      top: 48%;
+      top: 50%;
     }
     h1 {
       font-size: 36px;
@@ -497,18 +574,23 @@
 
 <!-- Navigation Bar -->
 <header class="topbar">
-  <div class="logo">LOW VOLTAGE <span>STORE</span></div>
+  <div class="brand-group">
+    <div class="brand-logo-box">
+      <img class="brand-logo-img" id="header-logo" src="./logo.png" alt="NetAxS Smart Solutions Logo">
+    </div>
+    <div class="logo">NetAxS <span>SMART SOLUTIONS</span></div>
+  </div>
   <div class="nav-right">
     <span class="top-menu">PRODUCT SHOWCASE · 2026</span>
     <button class="nav-btn" id="open-company" type="button">COMPANY</button>
-    <a class="nav-link" id="more-info-link" href="https://example.com/more-info" target="_blank" rel="noopener noreferrer">MORE INFO</a>
+    <a class="nav-link" id="more-info-link" href="https://wa.me/9495733509" target="_blank" rel="noopener noreferrer">MORE INFO</a>
   </div>
 </header>
 
 <section class="intro" id="intro">
   <p class="eyebrow">WELCOME TO OUR CATALOG</p>
-  <h1>SMART TECH<br><span>SYSTEMS.</span></h1>
-  <p class="subtitle">Cameras, DVRs & Low Voltage Solutions.</p>
+  <h1>NetAxS<br><span>SMART Solutions.</span></h1>
+  <p class="subtitle">CCTV, Access Control, LAN Networks, Computer Repairs & Smart Door Locks.</p>
   <div class="scroll-indicator" id="scroll-indicator-text">SCROLL TO EXPLORE<div class="scroll-line"></div></div>
 </section>
 
@@ -527,7 +609,10 @@
 <div class="company-modal" id="company-modal" role="dialog" aria-modal="true" aria-labelledby="company-name">
   <button id="close-company" type="button" aria-label="Close">×</button>
   <p class="label">ABOUT COMPANY</p>
-  <h2 id="company-name">Company Name</h2>
+  <h2 id="company-name">NetAxS Smart Solutions</h2>
+  <div class="company-logo-banner">
+    <img class="company-logo-img" id="modal-logo" src="./logo.png" alt="NetAxS Smart Solutions Logo">
+  </div>
   <div class="company-desc" id="company-about"></div>
   <div class="company-meta" id="company-contact"></div>
   <a id="company-more-link" class="product-link-btn" href="#" target="_blank" rel="noopener noreferrer">MORE INFO →</a>
@@ -547,17 +632,104 @@
 import * as THREE from "three";
 
 // ==========================================
-// 1. COMPANY INFORMATION & MORE INFO LINK
+// 1. COMPANY INFORMATION & LOGO BACKGROUND REMOVAL
 // ==========================================
 const COMPANY_INFO = {
-  name: "Apex Low Voltage Systems",
-  tagline: "CCTV CAMERAS · DVR SYSTEMS · LOW VOLTAGE SOLUTIONS",
-  description: "Trusted supplier and installer of commercial surveillance cameras, multi-channel DVRs, structured cabling, and low-voltage security systems.",
-  phone: "+965 0000 0000",
-  email: "info@example.com",
+  name: "NetAxS Smart Solutions",
+  tagline: "LOW VOLTAGE · CCTV · ACCESS CONTROL · LAN · COMPUTER REPAIRS · SMART DOOR LOCKS",
+  description: "Low voltage solutions including CCTV, access control, LAN networks, computer repairs, smart door locks, and more.",
+  whatsapp: "9495733509",
+  email: "netaxs.tech@gmail.com",
   location: "Mangaf, Kuwait",
-  moreInfoUrl: "https://google.com"
+  logoUrl: "./logo.png",
+  fallbackLogoUrl: "./images/logo.png",
+  moreInfoUrl: "https://wa.me/9495733509"
 };
+
+function removeWhiteLogoBackground(sourceImg, threshold = 232, softRange = 20) {
+  const w = sourceImg.naturalWidth || sourceImg.width;
+  const h = sourceImg.naturalHeight || sourceImg.height;
+  if (!w || !h) return null;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(sourceImg, 0, 0, w, h);
+
+  const imgData = ctx.getImageData(0, 0, w, h);
+  const data = imgData.data;
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const a = data[i + 3];
+    if (a === 0) continue;
+
+    const minCh = Math.min(r, g, b);
+    const maxCh = Math.max(r, g, b);
+    const saturation = maxCh - minCh;
+
+    if (minCh >= threshold && saturation <= 26) {
+      data[i + 3] = 0;
+    } else if (minCh >= threshold - softRange && saturation <= 34) {
+      const ratio = (minCh - (threshold - softRange)) / softRange;
+      data[i + 3] = Math.round(a * Math.max(0, Math.min(1, 1 - ratio)));
+    }
+  }
+
+  ctx.putImageData(imgData, 0, 0);
+  return canvas;
+}
+
+function loadTransparentLogoCanvas(onReady) {
+  const loaderImg = new Image();
+  loaderImg.crossOrigin = "anonymous";
+  let triedFallback = false;
+
+  loaderImg.onload = () => {
+    try {
+      const cleanCanvas = removeWhiteLogoBackground(loaderImg);
+      if (cleanCanvas) {
+        onReady(cleanCanvas, true);
+      } else {
+        onReady(loaderImg, false);
+      }
+    } catch (_) {
+      onReady(loaderImg, false);
+    }
+  };
+
+  loaderImg.onerror = () => {
+    if (!triedFallback && COMPANY_INFO.fallbackLogoUrl) {
+      triedFallback = true;
+      loaderImg.src = COMPANY_INFO.fallbackLogoUrl;
+    } else {
+      onReady(null, false);
+    }
+  };
+
+  loaderImg.src = COMPANY_INFO.logoUrl;
+}
+
+loadTransparentLogoCanvas((cleanLogoSource, pixelKeyed) => {
+  if (!cleanLogoSource) return;
+  const dataUrl = pixelKeyed && typeof cleanLogoSource.toDataURL === "function"
+    ? cleanLogoSource.toDataURL("image/png")
+    : null;
+
+  ["#header-logo", "#modal-logo"].forEach((sel) => {
+    const el = document.querySelector(sel);
+    if (!el) return;
+    if (dataUrl) {
+      el.src = dataUrl;
+      el.classList.remove("blend-fallback");
+    } else {
+      el.classList.add("blend-fallback");
+    }
+  });
+});
 
 const moreInfoNavLink = document.querySelector("#more-info-link");
 const companyMoreLink = document.querySelector("#company-more-link");
@@ -567,7 +739,7 @@ companyMoreLink.href = COMPANY_INFO.moreInfoUrl;
 document.querySelector("#company-name").textContent = COMPANY_INFO.name;
 document.querySelector("#company-about").textContent = COMPANY_INFO.description;
 document.querySelector("#company-contact").innerHTML =
-  `<strong>Phone:</strong> ${COMPANY_INFO.phone}<br><strong>Email:</strong> ${COMPANY_INFO.email}<br><strong>Location:</strong> ${COMPANY_INFO.location}`;
+  `<strong>WhatsApp:</strong> ${COMPANY_INFO.whatsapp}<br><strong>Email:</strong> ${COMPANY_INFO.email}<br><strong>Location:</strong> ${COMPANY_INFO.location}`;
 
 // ==========================================
 // 2. PRODUCTS CATALOG (with shortDesc painted on the wall)
@@ -589,39 +761,87 @@ const PRODUCTS = [
     url: "https://example.com/products/4k-dome-camera"
   },
   {
-    name: "16-Channel HD DVR Recorder",
-    shortDesc: "16-CH recording, remote mobile view & playback.",
-    description: "High-capacity digital video recorder supporting multi-channel playback, remote mobile viewing, and continuous recording.",
-    image: "https://www.rapidalarms.com.au/wp-content/uploads/2021/06/Depositphotos_40421751_s-2019-1000x675.jpg-1-1.webp",
+    name: "Access Control & Smart Lock Systems",
+    shortDesc: "Enhance security and simplify entry management with advanced Access Control and Smart Lock solutions. Our systems provide secure, convenient, and intelligent access management for homes, offices, commercial buildings, and industrial facilities. From biometric fingerprint readers and RFID card access to PIN-based entry and smart locks, we deliver reliable solutions that ensure only authorized individuals can access protected areas.",
+    description: `Key Features:
+- Biometric fingerprint and facial recognition.
+- RFID card and access card readers.
+- PIN code and password-based access.
+- Smart door locks with mobile app control.
+- Remote locking and unlocking.
+- Real-time access monitoring and activity logs.
+- Time-based access permissions.
+- Integration with CCTV and security systems.
+- Electric magnetic locks and door controllers.
+- Enhanced security with keyless entry.`,
+    image: "https://images.unsplash.com/photo-1558002038-1055907df827?w=600&q=75",
+    url: "https://example.com/products/access-control-smart-lock-systems"
+  },
+  {
+    name: "LAN Networks & Structured Cabling",
+    shortDesc: "Build a reliable, high-performance network infrastructure with our LAN Networking and Structured Cabling solutions. We provide professional network design, installation, configuration, and maintenance for businesses, offices, commercial buildings, and residential environments. From copper cabling and fiber optic connectivity to network racks, switches, and wireless access points, our solutions ensure seamless communication, high-speed data transmission, and scalable network performance.",
+    description: `Key Features:
+- Cat5e, Cat6, and Cat6a structured cabling.
+- Fiber optic cabling and connectivity solutions.
+- LAN network design and installation.
+- Network switches and routers.
+- Wi-Fi access points and wireless networking.
+- Server racks and network cabinets.
+- Patch panels and cable management.
+- Network testing, certification, and troubleshooting.
+- IP network configuration and optimization.
+- Scalable infrastructure for future expansion.`,
+    image: "./images/lan.png",
+    url: "https://example.com/products/lan-networks-structured-cabling"
+  },
+  {
+    name: "Computer Repairs & Diagnostics",
+    shortDesc: "Keep your computers running smoothly with our professional Computer Repair and Diagnostic services. We provide comprehensive troubleshooting, hardware repairs, software installation, system upgrades, and preventive maintenance for desktops, laptops, and workstations. Our technical support team identifies and resolves performance issues, ensuring reliable operation, improved efficiency, and extended equipment lifespan.",
+    description: `Key Features:
+- Desktop and laptop troubleshooting.
+- Hardware repair and component replacement.
+- Operating system installation and configuration.
+- Virus, malware, and security removal.
+- RAM and SSD upgrades.
+- Data backup and recovery.
+- Software installation and troubleshooting.
+- Computer performance optimization.
+- Network and connectivity troubleshooting.
+- Preventive maintenance and technical support.`,
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=75",
+    url: "https://example.com/products/computer-repairs-diagnostics"
+  },
+  {
+    name: "PRODUCTS",
+    shortDesc: "CCTV CAMERAS, DVR, NVR, POWER SUPPLY, HOME SMART LOCK, COMPUTER ACCESSORIES, ETC...",
+    description: `Brands:
+- CP Plus.
+- HID.
+- Honeywell.
+- Dahua.
+- Hikvision.
+- EZVIZ.
+- ZEBRONICS.
+- HP`,
+    image: "./images/brand.png",
     url: "https://example.com/products/16ch-dvr"
   },
   {
-    name: "Low Voltage PoE Switch",
-    shortDesc: "8-port PoE power & data for IP cameras.",
-    description: "8-port Power-over-Ethernet network switch for clean low-voltage power and data delivery to IP cameras and access points.",
-    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=75",
-    url: "https://example.com/products/poe-switch"
-  },
-  {
-    name: "Bullet IR Night Camera",
-    shortDesc: "Long-range night IR for outdoor perimeters.",
-    description: "Long-range infrared bullet camera designed for perimeter monitoring, parking lots, and commercial entrances.",
-    image: "https://images.unsplash.com/photo-1588508065123-287b28e013da?w=600&q=75",
-    url: "https://example.com/products/ir-bullet-camera"
-  },
-  {
-    name: "24V Low Voltage Power Supply",
-    shortDesc: "Regulated multi-output box with surge guard.",
-    description: "Regulated multi-output low-voltage power distribution box with surge protection for security and automation systems.",
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=75",
-    url: "https://example.com/products/24v-power-supply"
-  },
-  {
-    name: "Smart Access Control Keypad",
-    shortDesc: "RFID & PIN door access for low-voltage entry.",
-    description: "Low-voltage RFID and PIN access controller for secure doors, gates, and restricted commercial rooms.",
-    image: "https://images.unsplash.com/photo-1558002038-1055907df827?w=600&q=75",
-    url: "https://example.com/products/access-keypad"
+    name: "Building Intrusion Detection & Alarm Systems",
+    shortDesc: "Protect your premises with advanced Building Intrusion Detection and Alarm Systems designed to detect unauthorized access and potential security threats. Our solutions provide reliable 24/7 monitoring using intelligent sensors, motion detectors, door and window contacts, and centralized alarm control panels. Whether for residential, commercial, or industrial environments, we deliver integrated security systems that help prevent intrusions and enhance overall building safety.",
+    description: `Key Features:
+- Advanced intrusion alarm control panels.
+- PIR motion and movement detectors.
+- Door and window magnetic contacts.
+- Glass-break detection sensors.
+- Indoor and outdoor security sensors.
+- 24/7 intrusion monitoring and protection.
+- Audible sirens and alarm notifications.
+- Remote system control and mobile alerts.
+- Zone-based security management.
+- Integration with CCTV and access control systems.`,
+    image: "./images/Bis.jpg",
+    url: "https://example.com/products/building-intrusion-detection-alarm-systems"
   }
 ];
 
@@ -708,66 +928,101 @@ for (let z = -5; z >= -85; z -= 20) {
 
 box(12, 7, 0.25, wallMat, 0, 3.5, -91);
 
+const textureLoader = new THREE.TextureLoader();
+textureLoader.setCrossOrigin("anonymous");
+
+function drawCompanyBoard(ctx, info, cleanLogo) {
+  ctx.clearRect(0, 0, 1024, 680);
+  ctx.fillStyle = "#14120f";
+  ctx.fillRect(0, 0, 1024, 680);
+
+  ctx.strokeStyle = "#c8a66a";
+  ctx.lineWidth = 8;
+  ctx.strokeRect(28, 28, 968, 624);
+
+  if (cleanLogo) {
+    const logoW = 420, logoH = 168;
+    const logoX = (1024 - logoW) / 2;
+    const logoY = 36;
+    const w = cleanLogo.width || 420;
+    const h = cleanLogo.height || 168;
+    const scale = Math.min(logoW / w, logoH / h);
+    const drawW = w * scale;
+    const drawH = h * scale;
+    ctx.drawImage(
+      cleanLogo,
+      logoX + (logoW - drawW) / 2,
+      logoY + (logoH - drawH) / 2,
+      drawW,
+      drawH
+    );
+  } else {
+    ctx.fillStyle = "#c8a66a";
+    ctx.font = "bold 22px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("COMPANY PROFILE", 512, 92);
+  }
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 46px Georgia, serif";
+  ctx.textAlign = "center";
+  ctx.fillText(info.name, 512, 236);
+
+  ctx.fillStyle = "#d5b16d";
+  ctx.font = "bold 17px Arial";
+  ctx.fillText(info.tagline, 512, 272);
+
+  ctx.fillStyle = "#d2c9bb";
+  ctx.font = "23px Arial";
+  const words = info.description.split(" ");
+  let line = "", yPos = 318;
+  for (const w of words) {
+    const testLine = line + w + " ";
+    if (ctx.measureText(testLine).width > 840) {
+      ctx.fillText(line.trim(), 512, yPos);
+      line = w + " ";
+      yPos += 33;
+    } else {
+      line = testLine;
+    }
+  }
+  if (line.trim()) ctx.fillText(line.trim(), 512, yPos);
+
+  ctx.fillStyle = "#e8d4a8";
+  ctx.font = "22px Arial";
+  ctx.fillText(`WhatsApp: ${info.whatsapp}   |   Email: ${info.email}   |   ${info.location}`, 512, 448);
+
+  const btnX = 332, btnY = 492, btnW = 360, btnH = 82;
+  ctx.fillStyle = "#c8a66a";
+  ctx.fillRect(btnX, btnY, btnW, btnH);
+
+  ctx.strokeStyle = "#f2d89b";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(btnX + 4, btnY + 4, btnW - 8, btnH - 8);
+
+  ctx.fillStyle = "#14120f";
+  ctx.font = "bold 28px Arial";
+  ctx.fillText("WHATSAPP US  →", 512, btnY + 51);
+}
+
 function createCompanyBoardTexture(info) {
   const c = document.createElement("canvas");
   c.width = 1024;
   c.height = 680;
   const g = c.getContext("2d");
 
-  g.fillStyle = "#14120f";
-  g.fillRect(0, 0, 1024, 680);
-
-  g.strokeStyle = "#c8a66a";
-  g.lineWidth = 8;
-  g.strokeRect(28, 28, 968, 624);
-
-  g.fillStyle = "#c8a66a";
-  g.font = "bold 22px Arial";
-  g.textAlign = "center";
-  g.fillText("COMPANY PROFILE", 512, 88);
-
-  g.fillStyle = "#ffffff";
-  g.font = "bold 52px Georgia, serif";
-  g.fillText(info.name, 512, 158);
-
-  g.fillStyle = "#d5b16d";
-  g.font = "bold 20px Arial";
-  g.fillText(info.tagline, 512, 208);
-
-  g.fillStyle = "#d2c9bb";
-  g.font = "25px Arial";
-  const words = info.description.split(" ");
-  let line = "", yPos = 272;
-  for (const w of words) {
-    const testLine = line + w + " ";
-    if (g.measureText(testLine).width > 820) {
-      g.fillText(line.trim(), 512, yPos);
-      line = w + " ";
-      yPos += 35;
-    } else {
-      line = testLine;
-    }
-  }
-  if (line.trim()) g.fillText(line.trim(), 512, yPos);
-
-  g.fillStyle = "#e8d4a8";
-  g.font = "23px Arial";
-  g.fillText(`${info.phone}   |   ${info.email}   |   ${info.location}`, 512, 435);
-
-  const btnX = 332, btnY = 485, btnW = 360, btnH = 82;
-  g.fillStyle = "#c8a66a";
-  g.fillRect(btnX, btnY, btnW, btnH);
-
-  g.strokeStyle = "#f2d89b";
-  g.lineWidth = 3;
-  g.strokeRect(btnX + 4, btnY + 4, btnW - 8, btnH - 8);
-
-  g.fillStyle = "#14120f";
-  g.font = "bold 30px Arial";
-  g.fillText("MORE INFO  →", 512, btnY + 52);
+  drawCompanyBoard(g, info, null);
 
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
+
+  loadTransparentLogoCanvas((cleanLogo) => {
+    if (cleanLogo) {
+      drawCompanyBoard(g, info, cleanLogo);
+      tex.needsUpdate = true;
+    }
+  });
+
   return tex;
 }
 
@@ -856,13 +1111,13 @@ function createWallPaintedTextTexture(product) {
   }
   g.restore();
 
-  g.font = "bold 48px Georgia, serif";
+  g.font = "bold 46px Georgia, serif";
   const heading = product.name.length > 30 ? product.name.slice(0, 29) + "…" : product.name;
   drawExtrudedText(
     g,
     heading,
     24,
-    72,
+    78,
     5,
     1.1,
     1.3,
@@ -873,9 +1128,9 @@ function createWallPaintedTextTexture(product) {
 
   g.save();
   g.fillStyle = "rgba(22, 18, 13, 0.82)";
-  g.fillRect(28, 96, 270, 5);
+  g.fillRect(28, 102, 270, 5);
   g.fillStyle = "rgba(213, 177, 109, 0.9)";
-  g.fillRect(24, 92, 270, 5);
+  g.fillRect(24, 98, 270, 5);
   g.restore();
 
   const shortText = product.shortDesc || product.description || "";
@@ -887,7 +1142,7 @@ function createWallPaintedTextTexture(product) {
       g,
       line,
       24,
-      140 + idx * 36,
+      146 + idx * 36,
       3,
       0.8,
       0.95,
@@ -921,8 +1176,6 @@ function fallbackTexture(title, index) {
   return t;
 }
 
-const textureLoader = new THREE.TextureLoader();
-textureLoader.setCrossOrigin("anonymous");
 const framePlaneGeo = new THREE.PlaneGeometry(2.35, 3.1);
 const wallPaintGeo = new THREE.PlaneGeometry(4.3, 3.0);
 const wallReliefBackingGeo = new THREE.BoxGeometry(4.24, 2.94, 0.04);
@@ -934,8 +1187,9 @@ const wallReliefBackingMat = new THREE.MeshStandardMaterial({
   opacity: 0.22
 });
 
-function addProductFrame(side, z, index) {
+function addFrame(side, z, index) {
   const product = PRODUCTS[index % PRODUCTS.length];
+
   const group = new THREE.Group();
   group.position.set(side * 5.86, 2.65, z);
   group.rotation.y = side < 0 ? Math.PI / 2 : -Math.PI / 2;
@@ -1007,10 +1261,10 @@ function addProductFrame(side, z, index) {
   clickable.push(inner, paintMesh);
 }
 
-let n = 0;
-for (let z = -2; z >= -82; z -= 9) {
-  addProductFrame(-1, z, n++);
-  addProductFrame(1, z, n++);
+const pairZs = [-4, -20, -36, -52, -68, -84];
+for (let p = 0; p < pairZs.length; p++) {
+  addFrame(-1, pairZs[p], p * 2);
+  addFrame(1, pairZs[p], p * 2 + 1);
 }
 
 // ==========================================
@@ -1099,24 +1353,27 @@ function syncLookPills() {
   });
 }
 
+function setWallLook(mode) {
+  yawVelocity = 0;
+  const mobileWallOffset = window.innerWidth <= 650 ? 1.15 : 0.65;
+  if (mode === "left") {
+    targetYaw = 1.28;
+    targetLateral = mobileWallOffset;
+  } else if (mode === "right") {
+    targetYaw = -1.28;
+    targetLateral = -mobileWallOffset;
+  } else {
+    targetYaw = 0;
+    targetLateral = 0;
+  }
+  targetPitch = 0;
+  syncLookPills();
+}
+
 lookPills.forEach((btn) => {
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
-    yawVelocity = 0;
-    const mode = btn.dataset.look;
-    const mobileWallOffset = window.innerWidth <= 650 ? 1.15 : 0.65;
-    if (mode === "left") {
-      targetYaw = 1.28;
-      targetLateral = mobileWallOffset;
-    } else if (mode === "right") {
-      targetYaw = -1.28;
-      targetLateral = -mobileWallOffset;
-    } else {
-      targetYaw = 0;
-      targetLateral = 0;
-    }
-    targetPitch = 0;
-    syncLookPills();
+    setWallLook(btn.dataset.look);
   });
 });
 
